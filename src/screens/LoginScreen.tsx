@@ -5,13 +5,9 @@ import {useTheme} from 'react-native-paper';
 import {useAuthStore} from '../store/useAuthStore';
 import Login from '../components/Auth/Login';
 
-const LoginScreen = ({navigation}: {navigation: any}) => {
-  const {user, authError} = useAuthStore();
+const LoginScreen = () => {
+  const {authError} = useAuthStore();
   const theme = useTheme();
-
-  if (user) {
-    return navigation.navigate('Home');
-  }
 
   return (
     <Container theme={theme}>
