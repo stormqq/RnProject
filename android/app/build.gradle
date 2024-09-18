@@ -116,7 +116,9 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.android.gms:play-services-auth:21.2.0")
     implementation "androidx.biometric:biometric:1.1.0"
-    implementation 'com.google.mlkit:text-recognition:16.0.1'
+    implementation project(':react-native-vision-camera')
+    implementation 'com.google.android.gms:play-services-mlkit-text-recognition:19.0.1'
+    implementation "androidx.camera:camera-core:1.1.0-alpha08"
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
