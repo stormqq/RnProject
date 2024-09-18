@@ -13,7 +13,9 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
-import com.mrousavy.camera.frameprocessor.FrameProcessorPlugin
+import com.mrousavy.camera.frameprocessors.FrameProcessorPlugin
+import com.mrousavy.camera.frameprocessors.VisionCameraProxy
+import com.mrousavy.camera.frameprocessors.Frame
 
 class TextRecognitionPlugin(proxy: VisionCameraProxy, options: Map<String, Any>?): FrameProcessorPlugin() {
 
@@ -26,7 +28,7 @@ class TextRecognitionPlugin(proxy: VisionCameraProxy, options: Map<String, Any>?
         val mediaImage: Image? = frame.getImage()
 
         if (mediaImage != null) {
-            val image = InputImage.fromMediaImage(mediaImage, frame.imageInfo.rotationDegrees)
+            val image = InputImage.fromMediaImage(mediaImage, 0)
             val task: Task<Text> = recognizer.process(image)
             try {
                 val text: Text = Tasks.await<Text>(task)
