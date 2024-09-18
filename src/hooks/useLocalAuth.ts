@@ -1,18 +1,18 @@
-import { useState, useEffect } from "react";
-import { AppState } from "react-native";
-import * as LocalAuthentication from "expo-local-authentication";
+import {useState, useEffect} from 'react';
+import {AppState} from 'react-native';
+import LocalAuthentication from 'rn-local-authentication';
 
 export function useLocalAuth() {
   const [localAuthError, setLocalAuthError] = useState<string | null>(null);
 
   const authenticate = async () => {
     const result = await LocalAuthentication.authenticateAsync({
-      promptMessage: "Unlock with Biometrics",
-      fallbackLabel: "Use Passcode",
+      reason: 'Unlock with Biometrics',
+      fallbackToPinCodeAction: true,
     });
 
     if (!result.success) {
-      setLocalAuthError("Local authentication failed. Please try again.");
+      setLocalAuthError('Local authentication failed. Please try again.');
     } else {
       setLocalAuthError(null);
     }
@@ -22,12 +22,12 @@ export function useLocalAuth() {
     authenticate();
 
     const subscription = AppState.addEventListener(
-      "change",
-      async (nextAppState) => {
-        if (nextAppState === "active") {
+      'change',
+      async nextAppState => {
+        if (nextAppState === 'active') {
           authenticate();
         }
-      }
+      },
     );
 
     return () => {
@@ -35,5 +35,5 @@ export function useLocalAuth() {
     };
   }, []);
 
-  return { localAuthError, authenticate };
+  return {localAuthError, authenticate};
 }
