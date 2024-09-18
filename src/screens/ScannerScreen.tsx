@@ -5,27 +5,35 @@ import {
   Camera,
   useCameraDevice,
   useCodeScanner,
+  useFrameProcessor,
 } from 'react-native-vision-camera';
 import Clipboard from '@react-native-clipboard/clipboard';
 import styled from 'styled-components/native';
 import {useToastStore} from '../store/useToastStore';
 import {ToastType} from '../types/toast';
+import { textRecognition } from '../plugins/textRecognition';
 
 export default function ScannerScreen() {
   const device = useCameraDevice('back');
   const [lastScannedCode, setLastScannedCode] = useState<string | null>(null);
   const {addNotification} = useToastStore();
 
-  const codeScanner = useCodeScanner({
-    codeTypes: ['qr', 'ean-13'],
-    onCodeScanned: codes => {
-      const scannedValue = codes[0]?.value;
-      if (scannedValue !== lastScannedCode) {
-        addNotification(`Scanned value: ${scannedValue}`, ToastType.INFO);
-        setLastScannedCode(scannedValue ?? null);
-      }
-    },
-  });
+  // const codeScanner = useCodeScanner({
+  //   codeTypes: ['qr', 'ean-13'],
+  //   onCodeScanned: codes => {
+  //     const scannedValue = codes[0]?.value;
+  //     if (scannedValue !== lastScannedCode) {
+  //       addNotification(`Scanned value: ${scannedValue}`, ToastType.INFO);
+  //       setLastScannedCode(scannedValue ?? null);
+  //     }
+  //   },
+  // });
+
+  const frameProcessor = useFrameProcessor(frame => {
+    'worklet';
+    const faces = textRecognition(frame);
+    console.log(`Faces in Frame: ${faces}`);
+  }, []);
 
   const copyToClipboard = useCallback(() => {
     if (!lastScannedCode) {
@@ -54,7 +62,8 @@ export default function ScannerScreen() {
         style={{flex: 1}}
         device={device}
         isActive={true}
-        codeScanner={codeScanner}
+        // codeScanner={codeScanner}
+        frameProcessor={frameProcessor}
       />
       <Footer>
         <Button onPress={copyToClipboard} mode="contained">
