@@ -5,27 +5,34 @@ import {
   Camera,
   useCameraDevice,
   useCodeScanner,
+  useFrameProcessor,
 } from 'react-native-vision-camera';
 import Clipboard from '@react-native-clipboard/clipboard';
 import styled from 'styled-components/native';
 import {useToastStore} from '../store/useToastStore';
 import {ToastType} from '../types/toast';
+import {scanText} from '../../node_modules/react-native-vc-text-recognition-module/src';
+import {Worklets} from 'react-native-worklets-core';
 
 export default function ScannerScreen() {
   const device = useCameraDevice('back');
   const [lastScannedCode, setLastScannedCode] = useState<string | null>(null);
   const {addNotification} = useToastStore();
 
-  const codeScanner = useCodeScanner({
-    codeTypes: ['qr', 'ean-13'],
-    onCodeScanned: codes => {
-      const scannedValue = codes[0]?.value;
-      if (scannedValue !== lastScannedCode) {
-        addNotification(`Scanned value: ${scannedValue}`, ToastType.INFO);
-        setLastScannedCode(scannedValue ?? null);
-      }
-    },
+  const handleSetScannedText = Worklets.createRunOnJS((text: string) => {
+    setLastScannedCode(text);
+    addNotification(`Scanned value: ${text}`, ToastType.INFO);
   });
+
+  const frameTextProcessor = useFrameProcessor(frame => {
+    'worklet';
+    const {text} = scanText(frame);
+    if (text && text !== lastScannedCode) {
+      handleSetScannedText(text);
+    }
+  }, []);
+
+  console.log('lastScannedCode', lastScannedCode);
 
   const copyToClipboard = useCallback(() => {
     if (!lastScannedCode) {
@@ -54,7 +61,11 @@ export default function ScannerScreen() {
         style={{flex: 1}}
         device={device}
         isActive={true}
-        codeScanner={codeScanner}
+        videoHdr={false}
+        enableBufferCompression={true}
+        enableFpsGraph={true}
+        // codeScanner={codeScanner}
+        frameProcessor={frameTextProcessor}
       />
       <Footer>
         <Button onPress={copyToClipboard} mode="contained">
