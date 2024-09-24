@@ -23,6 +23,7 @@ export const SearchCoinBar = ({handleSearch}: SearchCoinBarProps) => {
   return (
     <Container theme={theme}>
       <StyledTextInput
+        testID="search-bar"
         placeholder="Search.."
         onChangeText={setInput}
         value={input}
@@ -30,6 +31,7 @@ export const SearchCoinBar = ({handleSearch}: SearchCoinBarProps) => {
         underlineStyle={{display: 'none'}}
       />
       <IconButton
+        testID="search-button"
         icon={{
           uri: 'https://static-00.iconduck.com/assets.00/search-icon-2048x2048-cmujl7en.png',
         }}

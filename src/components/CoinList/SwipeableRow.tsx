@@ -37,6 +37,7 @@ const SwipeableRow: React.FC<SwipeableRowProps> = ({
       return (
         <Animated.View style={{flex: 1, transform: [{translateX: trans}]}}>
           <RectButton
+            testID="delete-button"
             style={[styles.rightAction, {backgroundColor: color}]}
             onPress={pressHandler}>
             <Icon source="delete" color="white" size={24} />

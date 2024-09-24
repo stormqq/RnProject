@@ -28,6 +28,7 @@ const Login = () => {
 
   return (
     <GoogleSigninButton
+      testID="GoogleSigninButton"
       size={GoogleSigninButton.Size.Wide}
       color={GoogleSigninButton.Color.Dark}
       style={{alignSelf: 'center'}}

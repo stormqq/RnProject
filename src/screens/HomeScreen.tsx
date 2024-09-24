@@ -47,6 +47,7 @@ export default function HomeScreen() {
       {shouldUseFlashList ? (
         <FlashList
           ref={listRef}
+          testID="flash-list"
           data={filteredCoins}
           keyExtractor={item => item.id}
           renderItem={({item, index}) => (
