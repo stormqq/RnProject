@@ -1,10 +1,9 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Share} from 'react-native';
 import {Button, Text} from 'react-native-paper';
 import {
   Camera,
   useCameraDevice,
-  useCodeScanner,
   useFrameProcessor,
 } from 'react-native-vision-camera';
 import Clipboard from '@react-native-clipboard/clipboard';
@@ -13,6 +12,7 @@ import {useToastStore} from '../store/useToastStore';
 import {ToastType} from '../types/toast';
 import {scanText} from '../../node_modules/react-native-vc-text-recognition-module/src';
 import {Worklets} from 'react-native-worklets-core';
+import {displayNotification} from '../helpers/notifications';
 
 export default function ScannerScreen() {
   const device = useCameraDevice('back');
@@ -32,7 +32,12 @@ export default function ScannerScreen() {
     }
   }, []);
 
-  console.log('lastScannedCode', lastScannedCode);
+  useEffect(() => {
+    if (!lastScannedCode) {
+      return;
+    }
+    displayNotification(lastScannedCode);
+  }, [lastScannedCode]);
 
   const copyToClipboard = useCallback(() => {
     if (!lastScannedCode) {
