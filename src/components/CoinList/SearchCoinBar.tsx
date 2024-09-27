@@ -1,15 +1,20 @@
 import React, {useCallback, useState} from 'react';
 import {View} from 'react-native';
-import {IconButton, TextInput, useTheme} from 'react-native-paper';
+import {Button, TextInput, useTheme} from 'react-native-paper';
 import styled from 'styled-components/native';
 import {CustomThemeType} from '../../themes/themes';
 import {useToastStore} from '../../store/useToastStore';
 import {ToastType} from '../../types/toast';
+import {SearchBar} from '@rneui/themed';
 
 type SearchCoinBarProps = {
   handleSearch: (input: string) => void;
+  handlePressCancel: () => void;
 };
-export const SearchCoinBar = ({handleSearch}: SearchCoinBarProps) => {
+export const SearchCoinBar = ({
+  handleSearch,
+  handlePressCancel,
+}: SearchCoinBarProps) => {
   const [input, setInput] = useState('');
   const theme: CustomThemeType = useTheme();
 
@@ -22,21 +27,24 @@ export const SearchCoinBar = ({handleSearch}: SearchCoinBarProps) => {
 
   return (
     <Container theme={theme}>
-      <StyledTextInput
+      {/* <StyledTextInput
         testID="search-bar"
-        placeholder="Search.."
+        placeholder="Search Cryptocurrency"
         onChangeText={setInput}
         value={input}
         clearButtonMode="never"
         underlineStyle={{display: 'none'}}
+        onSubmitEditing={handlerSubmitSearch}
+      /> */}
+      <SearchBar
+        platform="android"
+        placeholder="Search Cryptocurrency"
+        value={input}
+        onSubmitEditing={handlerSubmitSearch}
+        containerStyle={{flex: 1}}
+        inputContainerStyle={{backgroundColor: '#F8F9FA'}}
       />
-      <IconButton
-        testID="search-button"
-        icon={{
-          uri: 'https://static-00.iconduck.com/assets.00/search-icon-2048x2048-cmujl7en.png',
-        }}
-        onPress={handlerSubmitSearch}
-      />
+      <Button onPress={handlePressCancel}>Cancel</Button>
     </Container>
   );
 };
@@ -47,7 +55,6 @@ const Container = styled(View)<{theme: CustomThemeType}>`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  background-color: ${props => props.theme.colors.background};
 `;
 
 const StyledTextInput = styled(TextInput)`

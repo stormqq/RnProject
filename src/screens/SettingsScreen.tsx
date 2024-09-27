@@ -1,90 +1,116 @@
-import {Switch, Text, useTheme} from 'react-native-paper';
-import {useSettingsStore} from '../store/useSettingsStore';
-import {useThemeStore} from '../store/useThemeStore';
-import {CustomThemeType} from '../themes/themes';
-import {useAuthStore} from '../store/useAuthStore';
-import Lougout from '../components/Auth/Lougout';
-import styled from 'styled-components';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {View} from 'react-native';
-
-export default function SettingsScreen() {
-  const {currentTheme, toggleTheme} = useThemeStore();
-  const {isShakingModeActive, setIsShakingModeActive} = useSettingsStore();
-  const theme: CustomThemeType = useTheme();
-  const {user, authError} = useAuthStore();
-
+import React from 'react';
+import styled from 'styled-components/native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {Divider} from 'react-native-paper';
+const ProfileScreen = () => {
   return (
-    <Container theme={theme}>
-      {user && (
-        <WelcomeText theme={theme}>
-          Hi, <UserName>{user.name}</UserName>
-        </WelcomeText>
-      )}
-      <SettingRow>
-        <SettingLabel theme={theme}>Dark theme</SettingLabel>
-        <Switch
-          value={currentTheme === 'dark'}
-          color="#0a7ea4"
-          onValueChange={toggleTheme}
-        />
-      </SettingRow>
-      <SettingRow>
-        <SettingLabel theme={theme}>Shaking mode</SettingLabel>
-        <Switch
-          value={isShakingModeActive}
-          color="#0a7ea4"
-          onValueChange={setIsShakingModeActive}
-        />
-      </SettingRow>
-      <AuthButtons>
-        {user && <Lougout />}
-        {authError && <AuthError>{authError}</AuthError>}
-      </AuthButtons>
+    <Container>
+      <Header>
+        <ProfileImage source={{uri: 'https://i.imgflip.com/4/4t0m5.jpg'}} />
+        <UserName>Cute Doggo</UserName>
+        <UserEmail>doggo1234@gmail.com</UserEmail>
+        <UserPhone>+38 06611128312</UserPhone>
+      </Header>
+
+      <MenuContainer>
+        <MenuItem>
+          <MenuIcon name="backup-restore" size={24} />
+          <MenuText>History</MenuText>
+          <Icon name="arrow-right" size={24} color="#ccc" />
+        </MenuItem>
+        <Divider />
+        <MenuItem>
+          <MenuIcon name="bank" size={24} />
+          <MenuText>Bank Details</MenuText>
+          <Icon name="arrow-right" size={24} color="#ccc" />
+        </MenuItem>
+        <Divider />
+        <MenuItem>
+          <MenuIcon name="bell-outline" size={24} />
+          <MenuText>Notifications</MenuText>
+          <Icon name="arrow-right" size={24} color="#ccc" />
+        </MenuItem>
+        <Divider />
+        <MenuItem>
+          <MenuIcon name="shield-half-full" size={24} />
+          <MenuText>Security</MenuText>
+          <Icon name="arrow-right" size={24} color="#ccc" />
+        </MenuItem>
+        <Divider />
+        <MenuItem>
+          <MenuIcon name="help-circle-outline" size={24} />
+          <MenuText>Help and Support</MenuText>
+          <Icon name="arrow-right" size={24} color="#ccc" />
+        </MenuItem>
+        <Divider />
+        <MenuItem>
+          <MenuIcon name="file-document-outline" size={24} />
+          <MenuText>Terms and Conditions</MenuText>
+          <Icon name="arrow-right" size={24} color="#ccc" />
+        </MenuItem>
+        <Divider />
+      </MenuContainer>
     </Container>
   );
-}
+};
 
-const Container = styled(SafeAreaView)`
+export default ProfileScreen;
+
+const Container = styled.View`
   flex: 1;
-  background-color: ${props => props.theme.colors.background};
-`;
-
-const WelcomeText = styled(Text)<{theme: CustomThemeType}>`
-  font-size: 30px;
-  align-self: center;
   margin: 20px;
-  color: ${props => props.theme.colors.text};
 `;
 
-const UserName = styled(Text)`
-  font-weight: bold;
-  color: purple;
-`;
-
-const SettingRow = styled(View)`
-  flex-direction: row;
-  justify-content: space-between;
+const Header = styled.View`
+  background-color: #007bff;
+  padding: 20px;
   align-items: center;
-  padding: 20px;
+  justify-content: center;
+  border-radius: 10px;
 `;
 
-const SettingLabel = styled(Text)<{theme: CustomThemeType}>`
-  font-size: 30px;
-  color: ${props => props.theme.colors.text};
+const ProfileImage = styled.Image`
+  width: 80px;
+  height: 80px;
+  border-radius: 40px;
+  margin-bottom: 10px;
 `;
 
-const AuthButtons = styled(View)`
-  position: absolute;
-  bottom: 20px;
-  left: 0;
-  right: 0;
-  padding: 20px;
-`;
-
-const AuthError = styled(Text)`
-  color: red;
-  text-align: center;
-  font-size: 20px;
+const UserName = styled.Text`
+  font-size: 18px;
+  color: #ffffff;
   font-weight: bold;
+`;
+
+const UserEmail = styled.Text`
+  font-size: 14px;
+  color: #ffffff;
+`;
+
+const UserPhone = styled.Text`
+  font-size: 14px;
+  color: #ffffff;
+`;
+
+const MenuContainer = styled.View`
+  margin-top: 20px;
+  gap: 5px;
+`;
+
+const MenuItem = styled.TouchableOpacity`
+  flex-direction: row;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 1px;
+`;
+
+const MenuText = styled.Text`
+  flex: 1;
+  font-size: 16px;
+  color: #333;
+`;
+
+const MenuIcon = styled(Icon)`
+  margin-right: 10px;
+  color: #007bff;
 `;

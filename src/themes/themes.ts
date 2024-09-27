@@ -18,8 +18,8 @@ export const lightTheme: CustomThemeType = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: '#6200EE', // Vibrant purple
-    background: '#FFFFFF', // White background
+    primary: '#343A40', // Vibrant purple
+    background: '#F8F9FA', // White background
     surface: '#F5F5F5', // Light gray surface
     accent: '#e4f7f3', // Teal
     text: '#000000', // Black text

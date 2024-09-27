@@ -22,16 +22,17 @@ export const CoinPriceChart = ({data}: PriceChartProps) => {
 
   return (
     <LineChart.Provider data={data}>
-      <StyledInfo theme={theme}>Coin chart</StyledInfo>
-      <StyledDateTimeText theme={theme} options={options} />
-      <StyledPriceText
-        theme={theme}
-        format={({value}) => {
-          'worklet';
-          return value && `$${value}`;
-        }}
-        variant="formatted"
-      />
+      <ChartInfoContainer>
+        <StyledDateTimeText theme={theme} options={options} />
+        <StyledPriceText
+          theme={theme}
+          format={({value}) => {
+            'worklet';
+            return value && `$${value}`;
+          }}
+          variant="formatted"
+        />
+      </ChartInfoContainer>
       <LineChart>
         <LineChart.Path color="#8f1d43" />
         <LineChart.CursorCrosshair color="hotpink" />
@@ -40,17 +41,15 @@ export const CoinPriceChart = ({data}: PriceChartProps) => {
   );
 };
 
-const StyledInfo = styled(Text)<{theme: CustomThemeType}>`
-  font-size: 20px;
-  margin-bottom: 20px;
-  color: ${props => props.theme.colors.text};
-`;
-
 const StyledDateTimeText = styled(LineChart.DatetimeText)<{
   theme: CustomThemeType;
 }>`
   font-size: 20px;
   color: ${props => props.theme.colors.text};
+`;
+
+const ChartInfoContainer = styled.View`
+  margin-left: 10px;
 `;
 
 const StyledPriceText = styled(LineChart.PriceText)<{theme: CustomThemeType}>`

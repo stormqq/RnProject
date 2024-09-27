@@ -1,7 +1,7 @@
 import React, {useCallback, useMemo} from 'react';
 import {ScrollView} from 'react-native';
 import styled from 'styled-components/native';
-import {Avatar, IconButton, Text, useTheme} from 'react-native-paper';
+import {Avatar, Button, IconButton, Text, useTheme} from 'react-native-paper';
 import {CustomThemeType} from '../themes/themes';
 import {useToastStore} from '../store/useToastStore';
 import {queryClient} from '../../App';
@@ -46,26 +46,45 @@ const CoinDetails = ({route, navigation}) => {
   return (
     <Container theme={theme}>
       <UpperBar>
-        <IconButton icon="arrow-left" onPress={() => navigation.goBack()} />
         <CoinInfo>
+          <IconButton icon="arrow-left" onPress={() => navigation.goBack()} />
           <Avatar.Image size={30} source={{uri: coin?.image}} />
           <CoinName theme={theme}>{coin?.name}</CoinName>
+          <IconButton
+            icon={isFavorite ? 'star' : 'star-outline'}
+            onPress={handleToggleFavorite}
+          />
         </CoinInfo>
-        <IconButton
-          icon={isFavorite ? 'heart' : 'heart-outline'}
-          onPress={handleToggleFavorite}
-        />
+        <ExchangeButton textColor="#0063f5" icon={'swap-horizontal-circle'}>
+          Exchange
+        </ExchangeButton>
       </UpperBar>
+
+      <About theme={theme}>
+        <PriceSection>
+          <CurrentPrice>₹98,509.75</CurrentPrice>
+          <PriceChange>+ 1700.254 (9.77%)</PriceChange>
+        </PriceSection>
+      </About>
 
       <StyledScrollView
         contentContainerStyle={{alignItems: 'center', padding: 20, gap: 30}}>
-        <About theme={theme}>
-          <StyledCoinPriceChart>
-            <CoinPriceChart data={mockCoinData} />
-          </StyledCoinPriceChart>
-        </About>
+        <StyledCoinPriceChart>
+          <CoinPriceChart data={mockCoinData} />
+        </StyledCoinPriceChart>
 
-        <About theme={theme}>
+        <TimeFilters>
+          {['1H', '24H', '1W', '1M', '6M', '1Y', 'All'].map(filter => (
+            <TimeFilterButton key={filter} active={filter === '1H'}>
+              <TimeFilterText active={filter === '1H'}>{filter}</TimeFilterText>
+            </TimeFilterButton>
+          ))}
+        </TimeFilters>
+        <Card>
+          
+        </Card>
+
+        {/* <About theme={theme}>
           <CoinInfoRow
             label="Market Rank"
             value={`#${coin?.market_cap_rank}`}
@@ -80,7 +99,7 @@ const CoinDetails = ({route, navigation}) => {
           />
           <CoinInfoRow label="High 24h" value={`$${coin?.high_24h}`} />
           <CoinInfoRow label="Low 24h" value={`$${coin?.low_24h}`} />
-        </About>
+        </About> */}
       </StyledScrollView>
     </Container>
   );
@@ -97,14 +116,14 @@ const UpperBar = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
+  margin-top: 12px;
   width: 100%;
 `;
 
 const CoinInfo = styled.View`
   flex-direction: row;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
 `;
 
 const CoinName = styled(Text)<{theme: CustomThemeType}>`
@@ -122,7 +141,78 @@ const StyledCoinPriceChart = styled.View`
 `;
 
 const About = styled.View<{theme: CustomThemeType}>`
-  background-color: ${props => props.theme.colors.accent};
   border-radius: 10px;
+  padding: 16px;
   width: 100%;
+`;
+
+const ExchangeButton = styled(Button)`
+  background-color: #e1ecfa;
+  padding: 1px 5px;
+  border-radius: 20px;
+  justify-content: center;
+  align-items: center;
+  margin-right: 12px;
+`;
+
+const PriceSection = styled.View`
+  margin-top: 10px;
+  flex-direction: row;
+  align-items: center;
+`;
+
+const CurrentPrice = styled.Text`
+  color: #212529;
+  font-size: 28px;
+  font-weight: bold;
+  margin-right: 12px;
+`;
+
+const PriceChange = styled.Text`
+  color: #21bf73;
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 5px;
+`;
+
+const TimeFilters = styled.View`
+  flex-direction: row;
+  justify-content: space-around;
+  margin-top: 10px;
+  gap: 10px;
+`;
+
+const TimeFilterButton = styled.TouchableOpacity<{active: boolean}>`
+  background-color: ${props => (props.active ? '#eef6ff' : '#F8F9FA')};
+  padding: 5px 15px;
+  border: 1px solid #dee2e6;
+  border-radius: 15px;
+`;
+
+const TimeFilterText = styled.Text<{active: boolean}>`
+  color: ${props => (props.active ? '#1e90ff' : '#000')};
+`;
+
+const Card = styled.View<{
+  index: number;
+}>`
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 15px;
+  border-width: 0px;
+  margin: 6px 15px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  shadow-color: '#000';
+  shadow-opacity: 0.1;
+  shadow-radius: 3px;
+  elevation: 3;
+`;
+
+const CardCoinInfoContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
+  flex: 1;
+  gap: 10px;
 `;

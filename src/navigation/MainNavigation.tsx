@@ -1,10 +1,10 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Icon, useTheme} from 'react-native-paper';
-import {View} from 'react-native';
 import SettingsScreen from '../screens/SettingsScreen';
-import ScannerScreen from '../screens/ScannerScreen';
 import HomeStackScreen from './HomeStack';
+import MarketScreen from '../screens/MarketScreen';
+import RewardsScreen from '../screens/RewardsScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -19,7 +19,12 @@ const MainNavigation = () => {
         tabBarStyle: {
           backgroundColor: theme.colors.background,
           borderStartColor: theme.colors.onSurface,
-          borderTopWidth: 0,
+          paddingTop: 15,
+          paddingBottom: 15,
+          height: 80,
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
         },
       }}>
       <Tab.Screen
@@ -27,37 +32,28 @@ const MainNavigation = () => {
         component={HomeStackScreen}
         options={{
           title: 'Home',
-          tabBarIcon: ({color, focused}) => (
-            <Icon
-              size={30}
-              source={focused ? 'home' : 'home-outline'}
-              color={color}
-            />
+          tabBarIcon: ({color}) => (
+            <Icon size={35} source={'home-outline'} color={color} />
           ),
         }}
       />
       <Tab.Screen
-        name="Scanner"
-        component={ScannerScreen}
+        name="Rewards"
+        component={RewardsScreen}
         options={{
-          title: '',
-          tabBarIcon: ({color, focused}) => (
-            <View
-              style={{
-                borderRadius: 50,
-                backgroundColor: theme.colors.secondaryContainer,
-                alignItems: 'center',
-                justifyContent: 'center',
-                bottom: 5,
-                width: 100,
-                height: 60,
-              }}>
-              <Icon
-                size={38}
-                source={focused ? 'camera' : 'camera-outline'}
-                color={color}
-              />
-            </View>
+          title: 'Rewards',
+          tabBarIcon: ({color}) => (
+            <Icon size={35} source={'gift-outline'} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Market"
+        component={MarketScreen}
+        options={{
+          title: 'Market',
+          tabBarIcon: ({color}) => (
+            <Icon size={35} source={'chart-line'} color={color} />
           ),
         }}
       />
@@ -66,12 +62,8 @@ const MainNavigation = () => {
         component={SettingsScreen}
         options={{
           title: 'Settings',
-          tabBarIcon: ({color, focused}) => (
-            <Icon
-              size={30}
-              source={focused ? 'account-wrench' : 'account-wrench-outline'}
-              color={color}
-            />
+          tabBarIcon: ({color}) => (
+            <Icon size={35} source={'account-outline'} color={color} />
           ),
         }}
       />

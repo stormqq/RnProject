@@ -1,77 +1,49 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {RefreshControl, LayoutAnimation, View} from 'react-native';
+import React, {useRef} from 'react';
+import {RefreshControl, View} from 'react-native';
 import {useMarketCoins} from '../api/marketCoins';
 import {FlashList} from '@shopify/flash-list';
-import {filterBySearchQuery} from '../helpers/filterBySearchQuery';
-import {CoinMarkets} from '../types/coinMarkets';
 import {CustomThemeType} from '../themes/themes';
 import {useTheme} from 'react-native-paper';
-import Animated, {LinearTransition} from 'react-native-reanimated';
-import SearchCoinBar from '../components/CoinList/SearchCoinBar';
 import CoinItem from '../components/CoinList/CoinItem';
 import styled from 'styled-components/native';
+import CardWithButton from '../components/Other/CardWithButton';
+import {useAuthStore} from '../store/useAuthStore';
+import Login from '../components/Auth/Login';
 
 export default function HomeScreen() {
-  const [searchQuery, setSearchQuery] = useState('');
   const {data, refetch, isLoading} = useMarketCoins();
-  const [coins, setCoins] = useState(data || []);
+  const {user} = useAuthStore();
 
   const listRef = useRef<FlashList<number> | null>(null);
 
-  useEffect(() => {
-    if (data) {
-      setCoins(data);
-    }
-  }, [data]);
-
-  const filteredCoins = useMemo(
-    () => filterBySearchQuery(coins, searchQuery),
-    [coins, searchQuery],
-  );
-
-  const removeCoin = useCallback((id: string) => {
-    setCoins((prevCoins: CoinMarkets[]) =>
-      prevCoins.filter(coin => coin.id !== id),
-    );
-    listRef.current?.prepareForLayoutAnimationRender();
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-  }, []);
-
   const theme: CustomThemeType = useTheme();
-
-  const shouldUseFlashList = true;
 
   return (
     <SafeArea theme={theme}>
-      <SearchCoinBar handleSearch={setSearchQuery} />
-      {shouldUseFlashList ? (
-        <FlashList
-          ref={listRef}
-          testID="flash-list"
-          data={filteredCoins}
-          keyExtractor={item => item.id}
-          renderItem={({item, index}) => (
-            <CoinItem coin={item} index={index} removeCoin={removeCoin} />
-          )}
-          estimatedItemSize={44}
-          refreshControl={
-            <RefreshControl onRefresh={refetch} refreshing={isLoading} />
-          }
+      {user ? (
+        <CardWithButton
+          topicText={`Welcome, ${user.name.split(' ')[0]}`}
+          mainText="Make you first Investment today"
+          buttonText="Invest Today"
+          backgroundColor="#0063f5"
+          backgroundImage="https://i.ibb.co/PDSD2XN/circle.png"
+          backgroundImageStyles={{bottom: 0, right: 0}}
         />
       ) : (
-        <Animated.FlatList
-          data={filteredCoins}
-          keyExtractor={item => item.id}
-          renderItem={({item, index}) => (
-            <CoinItem coin={item} index={index} removeCoin={removeCoin} />
-          )}
-          refreshControl={
-            <RefreshControl onRefresh={refetch} refreshing={isLoading} />
-          }
-          itemLayoutAnimation={LinearTransition}
-          style={{flex: 1}}
-        />
+        <Login />
       )}
+      <TrendingTitle>Trending Coins</TrendingTitle>
+      <FlashList
+        ref={listRef}
+        testID="flash-list"
+        data={data}
+        keyExtractor={item => item.id}
+        renderItem={({item, index}) => <CoinItem coin={item} index={index} />}
+        estimatedItemSize={44}
+        refreshControl={
+          <RefreshControl onRefresh={refetch} refreshing={isLoading} />
+        }
+      />
     </SafeArea>
   );
 }
@@ -79,4 +51,12 @@ export default function HomeScreen() {
 const SafeArea = styled(View)<{theme: CustomThemeType}>`
   flex: 1;
   background-color: ${props => props.theme.colors.background};
+  margin-top: 10px;
+`;
+
+const TrendingTitle = styled.Text`
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  margin: 30px 15px 10px 15px;
 `;

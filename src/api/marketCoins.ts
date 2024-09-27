@@ -1,8 +1,9 @@
 import axios from 'axios';
 import {useQuery} from 'react-query';
+import { CoinMarkets } from '../types/coinMarkets';
 
 export const getAllMarketCoins = async () => {
-  const res = await axios.get(
+  const res = await axios.get<CoinMarkets[]>(
     'https://api.coingecko.com/api/v3/coins/markets',
     {
       params: {
