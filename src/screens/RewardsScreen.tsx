@@ -1,5 +1,5 @@
 import React, {useCallback} from 'react';
-import RewardCard from '../components/Other/RewardsCard';
+import RewardCard from '../components/Rewards/RewardsCard';
 import {YStack} from 'tamagui';
 import Banner from '../components/Other/Banner';
 import {useNavigation} from '@react-navigation/native';

@@ -10,7 +10,7 @@ import {
   XStack,
   YStack,
 } from 'tamagui';
-import RewardCard from '../components/Other/RewardsCard';
+import RewardCard from '../components/Rewards/RewardsCard';
 import {dataReferral} from './RewardsScreen';
 import BigBlueButton from '../components/Other/BigBlueButton';
 

@@ -13,7 +13,7 @@ import {CoinTabs} from './CoinTabs';
 import SearchCoinBar from '../components/CoinList/SearchCoinBar';
 import {CoinList} from '../components/CoinList/CoinList';
 import {BottomSheet} from '../components/Other/BottomSheet';
-import {RadioGroupItemWithLabel} from '../components/Other/MarketOptions';
+import {RadioGroupItemWithLabel} from '../components/Market/MarketOptions';
 import BigBlueButton from '../components/Other/BigBlueButton';
 
 const marketRate = {

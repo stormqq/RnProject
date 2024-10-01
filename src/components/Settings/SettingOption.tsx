@@ -8,7 +8,7 @@ interface SettingsItemProps {
   onPress: () => void;
 }
 
-const SettingsItem: React.FC<SettingsItemProps> = ({title, icon, onPress}) => {
+const SettingsItem = ({title, icon, onPress}: SettingsItemProps) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={{flexDirection: 'row', alignItems: 'center', padding: 15}}>
