@@ -7,7 +7,6 @@
 import 'react-native-gesture-handler';
 import React, {useEffect} from 'react';
 import {SafeAreaView, useColorScheme} from 'react-native';
-import MainNavigation from './src/navigation/MainNavigation';
 import {QueryClient, QueryClientProvider} from 'react-query';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {useAuthStore} from './src/store/useAuthStore';
@@ -20,8 +19,18 @@ import AuthNavigation from './src/navigation/AuthNavigation';
 import {NavigationContainer} from '@react-navigation/native';
 import {useLocalAuth} from './src/hooks/useLocalAuth';
 import styled from 'styled-components/native';
+import {createTamagui, TamaguiProvider} from 'tamagui';
+import {config} from '@tamagui/config/v3';
+import MainNavigation from './src/navigation/MainNavigation';
 
 export const queryClient = new QueryClient();
+
+const tamaguiConfig = createTamagui(config);
+
+type Conf = typeof tamaguiConfig;
+declare module '@tamagui/core' {
+  interface TamaguiCustomConfig extends Conf {}
+}
 
 function App(): React.JSX.Element {
   const {user} = useAuthStore();
@@ -35,9 +44,9 @@ function App(): React.JSX.Element {
   }, []);
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <QueryClientProvider client={queryClient}>
-        <GestureHandlerRootView style={{flex: 1}}>
+    <QueryClientProvider client={queryClient}>
+      <GestureHandlerRootView style={{flex: 1}}>
+        <TamaguiProvider config={tamaguiConfig}>
           <PaperProvider
             theme={currentTheme === 'light' ? lightTheme : darkTheme}>
             <NavigationContainer>
@@ -52,9 +61,9 @@ function App(): React.JSX.Element {
             )}
             <ToastManager />
           </PaperProvider>
-        </GestureHandlerRootView>
-      </QueryClientProvider>
-    </SafeAreaView>
+        </TamaguiProvider>
+      </GestureHandlerRootView>
+    </QueryClientProvider>
   );
 }
 

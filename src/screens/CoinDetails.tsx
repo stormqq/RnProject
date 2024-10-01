@@ -80,9 +80,7 @@ const CoinDetails = ({route, navigation}) => {
             </TimeFilterButton>
           ))}
         </TimeFilters>
-        <Card>
-          
-        </Card>
+        <Card></Card>
 
         {/* <About theme={theme}>
           <CoinInfoRow

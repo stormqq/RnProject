@@ -1,7 +1,8 @@
-import {ScrollView} from 'react-native';
-import React from 'react';
+import React, {useCallback} from 'react';
 import RewardCard from '../components/Other/RewardsCard';
-import CardWithButton from '../components/Other/CardWithButton';
+import {YStack} from 'tamagui';
+import Banner from '../components/Other/Banner';
+import {useNavigation} from '@react-navigation/native';
 
 const dataCoupons = [
   {label: 'No. of Coupons Won', value: '06'},
@@ -9,36 +10,55 @@ const dataCoupons = [
   {label: 'Remaining Coupons to Spin', value: '01'},
 ];
 
-const dataReferral = [
+export const dataReferral = [
   {label: 'Total No of referral', value: '12'},
   {label: 'Total No of Qualified referral', value: '05'},
 ];
 
 const RewardsScreen = () => {
+  const navigation = useNavigation();
+
+  const handleReferNow = useCallback(() => {
+    // @ts-ignore
+    navigation.navigate('ReferFriend');
+  }, []);
+
   return (
-    <ScrollView
-      style={{
-        marginTop: 10,
-      }}>
-      <RewardCard title="Coupons" data={dataCoupons} />
-      <RewardCard title="Referral" data={dataReferral} />
-      <CardWithButton
-        topicText="Refer and Earn"
-        mainText="Refer you Friend and Win Cryptocoins"
-        buttonText="Refer Now"
-        backgroundColor="#F59300"
-        backgroundImage="https://i.ibb.co/NsM7YPD/thumbUp.png"
-        backgroundImageStyles={{bottom: 10, right: -12}}
-      />
-      <CardWithButton
-        topicText="Rewards"
-        mainText="Like, Share & get free coupons"
-        buttonText="Share Now"
-        backgroundColor="#9300F5"
-        backgroundImage="https://i.postimg.cc/Y9ZhVfZ7/like-Share.png"
-        backgroundImageStyles={{bottom: -30, right: 0}}
-      />
-    </ScrollView>
+    <YStack mt="$3" px="$4" gap="$5">
+      <YStack gap="$3">
+        <RewardCard title="Coupons" data={dataCoupons} />
+        <RewardCard title="Referral" data={dataReferral} />
+      </YStack>
+
+      <YStack gap="$3">
+        <Banner
+          onPress={handleReferNow}
+          title="Refer and Earn"
+          subtitle="Refer you Friend and Win Cryptocoins"
+          buttonText="Refer Now"
+          backgroundImage="https://i.ibb.co/NsM7YPD/thumbUp.png"
+          styles={{
+            backgroundColor: '#F59300',
+            marginTop: 70,
+            backgroundImageWidth: 120,
+            backgroundImageHeight: 120,
+          }}
+        />
+        <Banner
+          title="Rewards"
+          subtitle="Like, Share & get free coupons"
+          buttonText="Share Now"
+          backgroundImage="https://i.postimg.cc/Y9ZhVfZ7/like-Share.png"
+          styles={{
+            backgroundColor: '#9300F5',
+            marginTop: 70,
+            marginRight: 20,
+            backgroundImageWidth: 150,
+            backgroundImageHeight: 120,
+          }}
+        />
+      </YStack>
+    </YStack>
   );
 };
 

@@ -1,62 +1,54 @@
 import React, {useRef} from 'react';
-import {RefreshControl, View} from 'react-native';
+import {RefreshControl} from 'react-native';
 import {useMarketCoins} from '../api/marketCoins';
 import {FlashList} from '@shopify/flash-list';
-import {CustomThemeType} from '../themes/themes';
-import {useTheme} from 'react-native-paper';
-import CoinItem from '../components/CoinList/CoinItem';
-import styled from 'styled-components/native';
-import CardWithButton from '../components/Other/CardWithButton';
 import {useAuthStore} from '../store/useAuthStore';
 import Login from '../components/Auth/Login';
+import Banner from '../components/Other/Banner';
+import {H3, View} from 'tamagui';
+import CoinItemNew from '../components/CoinList/CoinItemNew';
+import {CoinMarkets} from '../types/coinMarkets';
 
 export default function HomeScreen() {
   const {data, refetch, isLoading} = useMarketCoins();
   const {user} = useAuthStore();
-
-  const listRef = useRef<FlashList<number> | null>(null);
-
-  const theme: CustomThemeType = useTheme();
+  const listRef = useRef<FlashList<CoinMarkets> | null>(null);
 
   return (
-    <SafeArea theme={theme}>
-      {user ? (
-        <CardWithButton
-          topicText={`Welcome, ${user.name.split(' ')[0]}`}
-          mainText="Make you first Investment today"
-          buttonText="Invest Today"
-          backgroundColor="#0063f5"
-          backgroundImage="https://i.ibb.co/PDSD2XN/circle.png"
-          backgroundImageStyles={{bottom: 0, right: 0}}
-        />
-      ) : (
-        <Login />
-      )}
-      <TrendingTitle>Trending Coins</TrendingTitle>
+    <View flex={1} px="$4" pt="$4">
       <FlashList
         ref={listRef}
         testID="flash-list"
         data={data}
         keyExtractor={item => item.id}
-        renderItem={({item, index}) => <CoinItem coin={item} index={index} />}
+        renderItem={({item}) => <CoinItemNew coin={item} />}
         estimatedItemSize={44}
         refreshControl={
           <RefreshControl onRefresh={refetch} refreshing={isLoading} />
         }
+        ListHeaderComponent={
+          <View>
+            {user ? (
+              <Banner
+                title={`Welcome ${user.name.split(' ')[0]},`}
+                subtitle="Make you first Investment today"
+                buttonText="Invest Today"
+                backgroundImage="https://i.ibb.co/PDSD2XN/circle.png"
+                styles={{
+                  backgroundColor: '#203ED6',
+                  marginTop: 40,
+                  tintColor: '#0045ad',
+                }}
+              />
+            ) : (
+              <Login />
+            )}
+            <H3 mt={32} mb={16} fontWeight={'bold'}>
+              Trending Coins
+            </H3>
+          </View>
+        }
       />
-    </SafeArea>
+    </View>
   );
 }
-
-const SafeArea = styled(View)<{theme: CustomThemeType}>`
-  flex: 1;
-  background-color: ${props => props.theme.colors.background};
-  margin-top: 10px;
-`;
-
-const TrendingTitle = styled.Text`
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 10px;
-  margin: 30px 15px 10px 15px;
-`;

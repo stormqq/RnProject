@@ -1,73 +1,50 @@
 import React from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Icon, useTheme} from 'react-native-paper';
-import SettingsScreen from '../screens/SettingsScreen';
-import HomeStackScreen from './HomeStack';
-import MarketScreen from '../screens/MarketScreen';
-import RewardsScreen from '../screens/RewardsScreen';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {useAuthStore} from '../store/useAuthStore';
+import LoginScreen from '../screens/LoginScreen';
+import MainTabs from './MainTabs';
+import CoinDetailsNew from '../screens/CoinDetailsNew';
+import ReferFriendScreen from '../screens/ReferFriendScreen';
+import ReceiveCoin from '../screens/ReceiveCoin';
 
-const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
 const MainNavigation = () => {
-  const theme = useTheme();
+  const {user} = useAuthStore();
 
   return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarActiveTintColor: theme.colors.primary,
-        headerShown: false,
-        tabBarStyle: {
-          backgroundColor: theme.colors.background,
-          borderStartColor: theme.colors.onSurface,
-          paddingTop: 15,
-          paddingBottom: 15,
-          height: 80,
-        },
-        tabBarLabelStyle: {
-          fontSize: 12,
-        },
-      }}>
-      <Tab.Screen
-        name="Home"
-        component={HomeStackScreen}
-        options={{
-          title: 'Home',
-          tabBarIcon: ({color}) => (
-            <Icon size={35} source={'home-outline'} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Rewards"
-        component={RewardsScreen}
-        options={{
-          title: 'Rewards',
-          tabBarIcon: ({color}) => (
-            <Icon size={35} source={'gift-outline'} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Market"
-        component={MarketScreen}
-        options={{
-          title: 'Market',
-          tabBarIcon: ({color}) => (
-            <Icon size={35} source={'chart-line'} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Settings"
-        component={SettingsScreen}
-        options={{
-          title: 'Settings',
-          tabBarIcon: ({color}) => (
-            <Icon size={35} source={'account-outline'} color={color} />
-          ),
-        }}
-      />
-    </Tab.Navigator>
+    <Stack.Navigator>
+      {!user ? (
+        <Stack.Screen
+          name="Auth"
+          component={LoginScreen}
+          options={{headerShown: false}}
+        />
+      ) : (
+        <>
+          <Stack.Screen
+            name="MainTabs"
+            component={MainTabs}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Details"
+            component={CoinDetailsNew}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ReferFriend"
+            component={ReferFriendScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ReceiveCoin"
+            component={ReceiveCoin}
+            options={{headerShown: false}}
+          />
+        </>
+      )}
+    </Stack.Navigator>
   );
 };
 

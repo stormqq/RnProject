@@ -1,116 +1,75 @@
 import React from 'react';
-import styled from 'styled-components/native';
+import {YStack, XStack, Avatar, Text, Separator, SizableText} from 'tamagui';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Divider} from 'react-native-paper';
-const ProfileScreen = () => {
-  return (
-    <Container>
-      <Header>
-        <ProfileImage source={{uri: 'https://i.imgflip.com/4/4t0m5.jpg'}} />
-        <UserName>Cute Doggo</UserName>
-        <UserEmail>doggo1234@gmail.com</UserEmail>
-        <UserPhone>+38 06611128312</UserPhone>
-      </Header>
+import {useAuthStore} from '../store/useAuthStore';
+import Login from '../components/Auth/Login';
 
-      <MenuContainer>
-        <MenuItem>
-          <MenuIcon name="backup-restore" size={24} />
-          <MenuText>History</MenuText>
-          <Icon name="arrow-right" size={24} color="#ccc" />
-        </MenuItem>
-        <Divider />
-        <MenuItem>
-          <MenuIcon name="bank" size={24} />
-          <MenuText>Bank Details</MenuText>
-          <Icon name="arrow-right" size={24} color="#ccc" />
-        </MenuItem>
-        <Divider />
-        <MenuItem>
-          <MenuIcon name="bell-outline" size={24} />
-          <MenuText>Notifications</MenuText>
-          <Icon name="arrow-right" size={24} color="#ccc" />
-        </MenuItem>
-        <Divider />
-        <MenuItem>
-          <MenuIcon name="shield-half-full" size={24} />
-          <MenuText>Security</MenuText>
-          <Icon name="arrow-right" size={24} color="#ccc" />
-        </MenuItem>
-        <Divider />
-        <MenuItem>
-          <MenuIcon name="help-circle-outline" size={24} />
-          <MenuText>Help and Support</MenuText>
-          <Icon name="arrow-right" size={24} color="#ccc" />
-        </MenuItem>
-        <Divider />
-        <MenuItem>
-          <MenuIcon name="file-document-outline" size={24} />
-          <MenuText>Terms and Conditions</MenuText>
-          <Icon name="arrow-right" size={24} color="#ccc" />
-        </MenuItem>
-        <Divider />
-      </MenuContainer>
-    </Container>
+const ProfileScreen = () => {
+  const {user} = useAuthStore();
+
+  return (
+    <YStack f={1} p="$4">
+      <YStack
+        width={400}
+        height={210}
+        bg="$blue10"
+        p="$4"
+        ai="center"
+        jc="center"
+        br="$4"
+        mb="$3">
+        {user ? (
+          <>
+            <Avatar circular mb="$2" size={80}>
+              <Avatar.Image source={{uri: user.photo}} />
+            </Avatar>
+            <SizableText mb="$2" size="$8" color="$color1" fontWeight="bold">
+              {user.name}
+            </SizableText>
+            <SizableText size="$4" color="$color1">
+              {user.email}
+            </SizableText>
+            <SizableText size="$4" color="$color1">
+              +38 9444977118
+            </SizableText>
+          </>
+        ) : (
+          <Login />
+        )}
+      </YStack>
+
+      <YStack mt="$4" gap="$2.5">
+        <MenuItem icon="backup-restore" text="History" />
+        <Separator />
+        <MenuItem icon="bank" text="Bank Details" />
+        <Separator />
+        <MenuItem icon="bell-outline" text="Notifications" />
+        <Separator />
+        <MenuItem icon="shield-half-full" text="Security" />
+        <Separator />
+        <MenuItem icon="help-circle-outline" text="Help and Support" />
+        <Separator />
+        <MenuItem icon="file-document-outline" text="Terms and Conditions" />
+        <Separator />
+      </YStack>
+    </YStack>
   );
 };
 
+const MenuItem = ({icon, text}: {icon: string; text: string}) => (
+  <XStack
+    borderBottomColor={'$gray6'}
+    borderBottomWidth={1}
+    ai="center"
+    pb="$5"
+    hoverStyle={{bg: '$gray2'}}
+    pressStyle={{bg: '$gray3'}}>
+    <Icon name={icon} size={24} color="#007bff" />
+    <Text ml="$3" f={1} fontSize="$8" color="$color">
+      {text}
+    </Text>
+    <Icon name="arrow-right" size={24} color="#ccc" />
+  </XStack>
+);
+
 export default ProfileScreen;
-
-const Container = styled.View`
-  flex: 1;
-  margin: 20px;
-`;
-
-const Header = styled.View`
-  background-color: #007bff;
-  padding: 20px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-`;
-
-const ProfileImage = styled.Image`
-  width: 80px;
-  height: 80px;
-  border-radius: 40px;
-  margin-bottom: 10px;
-`;
-
-const UserName = styled.Text`
-  font-size: 18px;
-  color: #ffffff;
-  font-weight: bold;
-`;
-
-const UserEmail = styled.Text`
-  font-size: 14px;
-  color: #ffffff;
-`;
-
-const UserPhone = styled.Text`
-  font-size: 14px;
-  color: #ffffff;
-`;
-
-const MenuContainer = styled.View`
-  margin-top: 20px;
-  gap: 5px;
-`;
-
-const MenuItem = styled.TouchableOpacity`
-  flex-direction: row;
-  align-items: center;
-  padding: 15px;
-  margin-bottom: 1px;
-`;
-
-const MenuText = styled.Text`
-  flex: 1;
-  font-size: 16px;
-  color: #333;
-`;
-
-const MenuIcon = styled(Icon)`
-  margin-right: 10px;
-  color: #007bff;
-`;

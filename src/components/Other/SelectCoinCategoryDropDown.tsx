@@ -33,19 +33,18 @@ const SelectCoinCategoryDropDown = () => {
           </View>
         );
       }}
-      renderItem={(item, index, isSelected) => {
-        return (
-          <View
-            style={{
-              ...styles.dropdownItemStyle,
-              ...(isSelected && {backgroundColor: '#D2D9DF'}),
-            }}>
-            <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
-          </View>
-        );
-      }}
-      showsVerticalScrollIndicator={false}
-      dropdownStyle={styles.dropdownMenuStyle}
+      // renderItem={(item, index, isSelected) => {
+      //   return (
+      //     <View
+      //       style={{
+      //         ...styles.dropdownItemStyle,
+      //         ...(isSelected && {backgroundColor: '#D2D9DF'}),
+      //       }}>
+      //       <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
+      //     </View>
+      //   );
+      // }}
+      // dropdownStyle={styles.dropdownMenuStyle}
     />
   );
 };
