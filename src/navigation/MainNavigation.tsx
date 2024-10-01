@@ -3,9 +3,9 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {useAuthStore} from '../store/useAuthStore';
 import LoginScreen from '../screens/LoginScreen';
 import MainTabs from './MainTabs';
-import CoinDetailsNew from '../screens/CoinDetailsNew';
 import ReferFriendScreen from '../screens/ReferFriendScreen';
 import ReceiveCoin from '../screens/ReceiveCoin';
+import CoinDetails from '../screens/CoinDetails';
 
 const Stack = createNativeStackNavigator();
 
@@ -29,7 +29,7 @@ const MainNavigation = () => {
           />
           <Stack.Screen
             name="Details"
-            component={CoinDetailsNew}
+            component={CoinDetails}
             options={{headerShown: false}}
           />
           <Stack.Screen

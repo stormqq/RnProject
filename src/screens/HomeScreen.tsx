@@ -6,8 +6,8 @@ import {useAuthStore} from '../store/useAuthStore';
 import Login from '../components/Auth/Login';
 import Banner from '../components/Other/Banner';
 import {H3, View} from 'tamagui';
-import CoinItemNew from '../components/CoinList/CoinItemNew';
 import {CoinMarkets} from '../types/coinMarkets';
+import CoinItem from '../components/CoinList/CoinItem';
 
 export default function HomeScreen() {
   const {data, refetch, isLoading} = useMarketCoins();
@@ -21,7 +21,7 @@ export default function HomeScreen() {
         testID="flash-list"
         data={data}
         keyExtractor={item => item.id}
-        renderItem={({item}) => <CoinItemNew coin={item} />}
+        renderItem={({item}) => <CoinItem coin={item} />}
         estimatedItemSize={44}
         refreshControl={
           <RefreshControl onRefresh={refetch} refreshing={isLoading} />

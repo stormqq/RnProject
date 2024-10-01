@@ -3,7 +3,7 @@ import {Avatar, Image, Text, XStack, YStack} from 'tamagui';
 import {CoinMarkets} from '../../types/coinMarkets';
 import {useNavigation} from '@react-navigation/native';
 
-const CoinItemNew = ({
+const CoinItem = ({
   coin,
   withChart,
 }: {
@@ -69,4 +69,4 @@ const CoinItemNew = ({
   );
 };
 
-export default CoinItemNew;
+export default CoinItem;

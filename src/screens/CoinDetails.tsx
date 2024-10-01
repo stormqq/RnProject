@@ -24,17 +24,17 @@ import {
 } from '@tamagui/lucide-icons';
 import {CoinPriceChart} from '../components/CoinDetails/PriceChart';
 import {mockCoinData} from '../constants/coinDataMock';
-import CoinItemNew from '../components/CoinList/CoinItemNew';
 import BigBlueButton from '../components/Other/BigBlueButton';
 import {BottomSheet} from '../components/Other/BottomSheet';
 import {Pressable} from 'react-native';
+import CoinItem from '../components/CoinList/CoinItem';
 
 type CoinDetailsProps = {
   route: any;
   navigation: any;
 };
 
-const CoinDetailsNew = ({route, navigation}: CoinDetailsProps) => {
+const CoinDetails = ({route, navigation}: CoinDetailsProps) => {
   const {id} = route.params;
   const {addNotification} = useToastStore();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -156,7 +156,7 @@ const CoinDetailsNew = ({route, navigation}: CoinDetailsProps) => {
           ))}
         </XStack>
         <YStack p="$4" gap="$2">
-          <CoinItemNew withChart coin={coin} />
+          <CoinItem withChart coin={coin} />
           <XStack
             p="$5"
             ai="center"
@@ -229,4 +229,4 @@ const CoinDetailsNew = ({route, navigation}: CoinDetailsProps) => {
   );
 };
 
-export default CoinDetailsNew;
+export default CoinDetails;

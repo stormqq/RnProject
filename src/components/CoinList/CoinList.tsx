@@ -3,8 +3,8 @@ import {FlashList} from '@shopify/flash-list';
 import {useFilteredCoins} from '../../hooks/useFilteredCoins';
 import {queryClient} from '../../../App';
 import {CoinMarkets} from '../../types/coinMarkets';
-import CoinItemNew from './CoinItemNew';
 import {Image, SizableText, YStack} from 'tamagui';
+import CoinItem from './CoinItem';
 
 type CoinListProps = {
   filterType?: CoinFilterType;
@@ -40,7 +40,7 @@ export const CoinList = ({filterType, searchQuery}: CoinListProps) => {
       testID="flash-list"
       data={filteredCoins}
       keyExtractor={item => item.id}
-      renderItem={({item}) => <CoinItemNew coin={item} />}
+      renderItem={({item}) => <CoinItem coin={item} />}
       estimatedItemSize={44}
     />
   );

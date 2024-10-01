@@ -3,7 +3,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Icon, useTheme} from 'react-native-paper';
 import SettingsScreen from '../screens/SettingsScreen';
 import RewardsScreen from '../screens/RewardsScreen';
-import MarketScreenNew from '../screens/MarketScreenNew';
+import MarketScreenNew from '../screens/MarketScreen';
 import HomeScreen from '../screens/HomeScreen';
 
 const Tab = createBottomTabNavigator();

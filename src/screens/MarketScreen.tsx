@@ -21,7 +21,7 @@ const marketRate = {
   percentage: -11.17,
 };
 
-const MarketScreenNew = () => {
+const MarketScreen = () => {
   const [isSearchOpened, setIsSearchOpened] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [marketValue, setMarketValue] = useState('Market- INR');
@@ -155,4 +155,4 @@ const MarketScreenNew = () => {
   );
 };
 
-export default MarketScreenNew;
+export default MarketScreen;
