@@ -19,20 +19,20 @@ export function useLocalAuth() {
   };
 
   useEffect(() => {
-    authenticate();
+    // authenticate();
 
-    const subscription = AppState.addEventListener(
-      'change',
-      async nextAppState => {
-        if (nextAppState === 'active') {
-          authenticate();
-        }
-      },
-    );
+    // const subscription = AppState.addEventListener(
+    //   'change',
+    //   async nextAppState => {
+    //     if (nextAppState === 'active') {
+    //       authenticate();
+    //     }
+    //   },
+    // );
 
-    return () => {
-      subscription.remove();
-    };
+    // return () => {
+    //   subscription.remove();
+    // };
   }, []);
 
   return {localAuthError, authenticate};

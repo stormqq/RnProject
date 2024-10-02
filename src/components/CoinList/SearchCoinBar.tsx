@@ -1,17 +1,18 @@
 import React, {useCallback, useState} from 'react';
-import {View} from 'react-native';
-import {IconButton, TextInput, useTheme} from 'react-native-paper';
-import styled from 'styled-components/native';
-import {CustomThemeType} from '../../themes/themes';
 import {useToastStore} from '../../store/useToastStore';
 import {ToastType} from '../../types/toast';
+import {SearchBar} from '@rneui/themed';
+import {Button, XStack} from 'tamagui';
 
 type SearchCoinBarProps = {
   handleSearch: (input: string) => void;
+  handlePressCancel: () => void;
 };
-export const SearchCoinBar = ({handleSearch}: SearchCoinBarProps) => {
+export const SearchCoinBar = ({
+  handleSearch,
+  handlePressCancel,
+}: SearchCoinBarProps) => {
   const [input, setInput] = useState('');
-  const theme: CustomThemeType = useTheme();
 
   const {addNotification} = useToastStore();
 
@@ -21,36 +22,51 @@ export const SearchCoinBar = ({handleSearch}: SearchCoinBarProps) => {
   }, [handleSearch, input, addNotification]);
 
   return (
-    <Container theme={theme}>
-      <StyledTextInput
-        testID="search-bar"
-        placeholder="Search.."
+    <XStack justifyContent="space-between" alignItems="center">
+      <SearchBar
+        platform="android"
+        placeholder="Search Cryptocurrency"
         onChangeText={setInput}
         value={input}
-        clearButtonMode="never"
-        underlineStyle={{display: 'none'}}
-      />
-      <IconButton
-        testID="search-button"
-        icon={{
-          uri: 'https://static-00.iconduck.com/assets.00/search-icon-2048x2048-cmujl7en.png',
+        placeholderTextColor={'#DFE2E4'}
+        onSubmitEditing={handlerSubmitSearch}
+        inputStyle={{
+          height: 40,
+          paddingVertical: 0,
+          fontSize: 16,
+          marginLeft: 0,
         }}
-        onPress={handlerSubmitSearch}
+        containerStyle={{
+          flex: 1,
+          borderRadius: 10,
+          borderWidth: 2,
+          borderColor: '#DFE2E4',
+          height: 50,
+        }}
+        inputContainerStyle={{
+          borderRadius: 5,
+          marginRight: 30,
+          height: 30,
+        }}
+        searchIcon={{
+          color: '#DFE2E4',
+        }}
+        clearIcon={{
+          color: '#DFE2E4',
+        }}
+        cancelIcon={{
+          color: '#DFE2E4',
+        }}
       />
-    </Container>
+      <Button
+        size={'$4'}
+        fontWeight={'bold'}
+        pressStyle={{backgroundColor: 'transparent', borderWidth: 0}}
+        onPress={handlePressCancel}>
+        Cancel
+      </Button>
+    </XStack>
   );
 };
 
 export default SearchCoinBar;
-
-const Container = styled(View)<{theme: CustomThemeType}>`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  background-color: ${props => props.theme.colors.background};
-`;
-
-const StyledTextInput = styled(TextInput)`
-  flex: 1;
-  margin: 10px;
-`;

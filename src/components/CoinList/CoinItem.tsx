@@ -1,129 +1,72 @@
-import {memo, useCallback} from 'react';
+import React, {useCallback} from 'react';
+import {Avatar, Image, Text, XStack, YStack} from 'tamagui';
 import {CoinMarkets} from '../../types/coinMarkets';
-import {CustomThemeType} from '../../themes/themes';
-import {Avatar, Text, useTheme} from 'react-native-paper';
-import {useSettingsStore} from '../../store/useSettingsStore';
-import {Pressable} from 'react-native';
-import SwipeableRow from './SwipeableRow';
-import styled from 'styled-components/native';
-import Animated, {FadeIn, LightSpeedOutLeft} from 'react-native-reanimated';
 import {useNavigation} from '@react-navigation/native';
 
-type CoinItemProps = {
+const CoinItem = ({
+  coin,
+  withChart,
+}: {
   coin: CoinMarkets;
-  index: number;
-  removeCoin: (id: string) => void;
-};
-
-const CoinItem = memo(({coin, index, removeCoin}: CoinItemProps) => {
-  const theme: CustomThemeType = useTheme();
-  const {isCurrentlyShaking} = useSettingsStore();
+  withChart?: boolean;
+}) => {
   const navigation = useNavigation();
 
-  const handleRemoveItem = useCallback(() => {
-    removeCoin(coin.id);
-  }, [coin.id]);
-
   const handlePress = useCallback(() => {
-    // router.push(`/coin/${coin.id}` as Href);
+    // @ts-ignore
     navigation.navigate('Details', {id: coin.id});
   }, [coin.id]);
 
   return (
-    <SwipeableRow handleAction={handleRemoveItem}>
-      <Pressable onPress={handlePress}>
-        <AnimatedContainer
-          theme={theme}
-          index={index}
-          entering={FadeIn.delay(100 * index)}
-          exiting={LightSpeedOutLeft.duration(500)}>
-          <CoinInfoContainer>
-            <Avatar.Image size={50} source={{uri: coin.image}} />
-            <CoinDetails>
-              <CoinName theme={theme}>{coin.name}</CoinName>
-              <PriceContainer>
-                <PriceText theme={theme}>
-                  {isCurrentlyShaking ? `****` : `$${coin.current_price}`}
-                </PriceText>
-                <PriceChange isPositive={coin.price_change_percentage_24h > 0}>
-                  {isCurrentlyShaking
-                    ? `****`
-                    : `${coin.price_change_percentage_24h}%`}
-                </PriceChange>
-              </PriceContainer>
-            </CoinDetails>
-          </CoinInfoContainer>
+    <XStack
+      onPress={handlePress}
+      elevation={1}
+      borderRadius={10}
+      backgroundColor={'$background'}
+      p="$4"
+      alignItems="center"
+      justifyContent="space-between"
+      my="$1.5">
+      <XStack gap={12}>
+        <Avatar circular size={50}>
+          <Avatar.Image source={{uri: coin.image}} />
+        </Avatar>
+        <YStack>
+          <Text fontSize={20} fontWeight={'bold'}>
+            {coin.name.length > 15
+              ? coin.name.slice(0, 15 - 3) + '...'
+              : coin.name}
+          </Text>
+          <Text>{coin.symbol.toUpperCase()}</Text>
+        </YStack>
+      </XStack>
 
-          <RightSection>
-            <CoinPrice theme={theme}>
-              {isCurrentlyShaking ? `****` : `$${coin.current_price}`}
-            </CoinPrice>
-            <HighPrice theme={theme}>
-              {isCurrentlyShaking ? `****` : `$${coin.high_24h}`}
-            </HighPrice>
-          </RightSection>
-        </AnimatedContainer>
-      </Pressable>
-    </SwipeableRow>
+      <XStack alignItems="center" gap={24}>
+        {!withChart && (
+          <Image
+            source={{
+              uri:
+                coin.price_change_24h > 0
+                  ? 'https://i.ibb.co/5RhmFvk/priceUp.png'
+                  : 'https://i.ibb.co/0YGSKy9/price-Down.png',
+              width: 55,
+              height: 35,
+            }}
+          />
+        )}
+        <YStack width={100} alignItems="flex-start">
+          <Text fontSize={20} fontWeight={'bold'}>
+            ${coin.current_price.toFixed(1)}
+          </Text>
+          <Text
+            color={coin.price_change_24h > 0 ? 'red' : 'green'}
+            fontWeight={'bold'}>
+            {coin.price_change_percentage_24h}%
+          </Text>
+        </YStack>
+      </XStack>
+    </XStack>
   );
-});
+};
 
 export default CoinItem;
-
-const AnimatedContainer = styled(Animated.View)<{
-  theme: CustomThemeType;
-  index: number;
-}>`
-  flex-direction: row;
-  gap: 10px;
-  padding: 10px;
-  align-items: center;
-  background-color: ${({theme, index}) =>
-    index % 2 === 0 ? theme.colors.accent : theme.colors.background};
-`;
-
-const CoinInfoContainer = styled.View`
-  flex-direction: row;
-  align-items: center;
-  flex: 1;
-  gap: 10px;
-`;
-
-const CoinDetails = styled.View`
-  gap: 5px;
-`;
-
-const CoinName = styled(Text)<{theme: CustomThemeType}>`
-  font-size: 20px;
-  width: 150px;
-  color: ${({theme}) => theme.colors.onSurface};
-`;
-
-const PriceContainer = styled.View`
-  flex-direction: row;
-  align-items: center;
-  gap: 5px;
-`;
-
-const PriceText = styled(Text)<{theme: CustomThemeType}>`
-  color: ${({theme}) => theme.colors.disabled};
-`;
-
-const PriceChange = styled(Text)<{isPositive: boolean}>`
-  color: ${({isPositive}) => (isPositive ? 'green' : 'red')};
-`;
-
-const RightSection = styled.View`
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 5px;
-`;
-
-const CoinPrice = styled(Text)<{theme: CustomThemeType}>`
-  font-size: 20px;
-  color: ${({theme}) => theme.colors.onSurface};
-`;
-
-const HighPrice = styled(Text)<{theme: CustomThemeType}>`
-  color: ${({theme}) => theme.colors.disabled};
-`;

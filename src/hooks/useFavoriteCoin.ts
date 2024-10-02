@@ -1,8 +1,8 @@
-import { useEffect, useState, useCallback, useMemo } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getFavoriteCoins } from "../helpers/favoriteCoins";
+import {useEffect, useState, useCallback, useMemo} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {getFavoriteCoins} from '../helpers/favoriteCoins';
 
-export const useFavoriteCoin = (coinId: string | undefined) => {
+export const useFavoriteCoin = (coinId?: string | undefined) => {
   const [favorites, setFavorites] = useState<string[]>([]);
 
   useEffect(() => {
@@ -11,7 +11,7 @@ export const useFavoriteCoin = (coinId: string | undefined) => {
         const favoriteTokens = await getFavoriteCoins();
         setFavorites(favoriteTokens);
       } catch (err) {
-        console.error("Failed to load favorites:", err);
+        console.error('Failed to load favorites:', err);
       }
     };
 
@@ -20,7 +20,7 @@ export const useFavoriteCoin = (coinId: string | undefined) => {
 
   const isFavorite = useMemo(
     () => coinId && favorites.includes(coinId),
-    [coinId, favorites]
+    [coinId, favorites],
   );
 
   const toggleFavorite = useCallback(async () => {
@@ -28,17 +28,18 @@ export const useFavoriteCoin = (coinId: string | undefined) => {
 
     try {
       const updatedFavorites = isFavorite
-        ? favorites.filter((favId) => favId !== coinId)
+        ? favorites.filter(favId => favId !== coinId)
         : [...favorites, coinId];
 
       setFavorites(updatedFavorites);
-      await AsyncStorage.setItem("user", JSON.stringify(updatedFavorites));
+      await AsyncStorage.setItem('user', JSON.stringify(updatedFavorites));
     } catch (err) {
-      console.error("Failed to update favorites:", err);
+      console.error('Failed to update favorites:', err);
     }
   }, [coinId, isFavorite, favorites]);
 
   return {
+    favorites,
     isFavorite,
     toggleFavorite,
   };

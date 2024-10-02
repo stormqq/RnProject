@@ -5,7 +5,9 @@ import {Toast} from './Toast';
 export const ToastManager = () => {
   const {notifications, removeNotification} = useToastStore();
 
-  if (notifications.length === 0) return null;
+  if (notifications.length === 0) {
+    return null;
+  }
 
   return (
     <>

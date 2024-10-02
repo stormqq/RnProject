@@ -1,82 +1,54 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {RefreshControl, LayoutAnimation, View} from 'react-native';
+import React, {useRef} from 'react';
+import {RefreshControl} from 'react-native';
 import {useMarketCoins} from '../api/marketCoins';
 import {FlashList} from '@shopify/flash-list';
-import {filterBySearchQuery} from '../helpers/filterBySearchQuery';
+import {useAuthStore} from '../store/useAuthStore';
+import Login from '../components/Auth/Login';
+import Banner from '../components/Other/Banner';
+import {H3, View} from 'tamagui';
 import {CoinMarkets} from '../types/coinMarkets';
-import {CustomThemeType} from '../themes/themes';
-import {useTheme} from 'react-native-paper';
-import Animated, {LinearTransition} from 'react-native-reanimated';
-import SearchCoinBar from '../components/CoinList/SearchCoinBar';
 import CoinItem from '../components/CoinList/CoinItem';
-import styled from 'styled-components/native';
 
 export default function HomeScreen() {
-  const [searchQuery, setSearchQuery] = useState('');
   const {data, refetch, isLoading} = useMarketCoins();
-  const [coins, setCoins] = useState(data || []);
-
-  const listRef = useRef<FlashList<number> | null>(null);
-
-  useEffect(() => {
-    if (data) {
-      setCoins(data);
-    }
-  }, [data]);
-
-  const filteredCoins = useMemo(
-    () => filterBySearchQuery(coins, searchQuery),
-    [coins, searchQuery],
-  );
-
-  const removeCoin = useCallback((id: string) => {
-    setCoins((prevCoins: CoinMarkets[]) =>
-      prevCoins.filter(coin => coin.id !== id),
-    );
-    listRef.current?.prepareForLayoutAnimationRender();
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-  }, []);
-
-  const theme: CustomThemeType = useTheme();
-
-  const shouldUseFlashList = true;
+  const {user} = useAuthStore();
+  const listRef = useRef<FlashList<CoinMarkets> | null>(null);
 
   return (
-    <SafeArea theme={theme}>
-      <SearchCoinBar handleSearch={setSearchQuery} />
-      {shouldUseFlashList ? (
-        <FlashList
-          ref={listRef}
-          testID="flash-list"
-          data={filteredCoins}
-          keyExtractor={item => item.id}
-          renderItem={({item, index}) => (
-            <CoinItem coin={item} index={index} removeCoin={removeCoin} />
-          )}
-          estimatedItemSize={44}
-          refreshControl={
-            <RefreshControl onRefresh={refetch} refreshing={isLoading} />
-          }
-        />
-      ) : (
-        <Animated.FlatList
-          data={filteredCoins}
-          keyExtractor={item => item.id}
-          renderItem={({item, index}) => (
-            <CoinItem coin={item} index={index} removeCoin={removeCoin} />
-          )}
-          refreshControl={
-            <RefreshControl onRefresh={refetch} refreshing={isLoading} />
-          }
-          itemLayoutAnimation={LinearTransition}
-          style={{flex: 1}}
-        />
-      )}
-    </SafeArea>
+    <View flex={1} px="$4" pt="$4">
+      <FlashList
+        ref={listRef}
+        testID="flash-list"
+        data={data}
+        keyExtractor={item => item.id}
+        renderItem={({item}) => <CoinItem coin={item} />}
+        estimatedItemSize={44}
+        refreshControl={
+          <RefreshControl onRefresh={refetch} refreshing={isLoading} />
+        }
+        ListHeaderComponent={
+          <View>
+            {user ? (
+              <Banner
+                title={`Welcome ${user.name.split(' ')[0]},`}
+                subtitle="Make you first Investment today"
+                buttonText="Invest Today"
+                backgroundImage="https://i.ibb.co/PDSD2XN/circle.png"
+                styles={{
+                  backgroundColor: '#203ED6',
+                  marginTop: 40,
+                  tintColor: '#0045ad',
+                }}
+              />
+            ) : (
+              <Login />
+            )}
+            <H3 mt={32} mb={16} fontWeight={'bold'}>
+              Trending Coins
+            </H3>
+          </View>
+        }
+      />
+    </View>
   );
 }
-
-const SafeArea = styled(View)<{theme: CustomThemeType}>`
-  flex: 1;
-  background-color: ${props => props.theme.colors.background};
-`;

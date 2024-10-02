@@ -1,81 +1,50 @@
 import React from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Icon, useTheme} from 'react-native-paper';
-import {View} from 'react-native';
-import SettingsScreen from '../screens/SettingsScreen';
-import ScannerScreen from '../screens/ScannerScreen';
-import HomeStackScreen from './HomeStack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {useAuthStore} from '../store/useAuthStore';
+import LoginScreen from '../screens/LoginScreen';
+import MainTabs from './MainTabs';
+import ReferFriendScreen from '../screens/ReferFriendScreen';
+import ReceiveCoin from '../screens/ReceiveCoin';
+import CoinDetails from '../screens/CoinDetails';
 
-const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
 const MainNavigation = () => {
-  const theme = useTheme();
+  const {user} = useAuthStore();
 
   return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarActiveTintColor: theme.colors.primary,
-        headerShown: false,
-        tabBarStyle: {
-          backgroundColor: theme.colors.background,
-          borderStartColor: theme.colors.onSurface,
-          borderTopWidth: 0,
-        },
-      }}>
-      <Tab.Screen
-        name="Home"
-        component={HomeStackScreen}
-        options={{
-          title: 'Home',
-          tabBarIcon: ({color, focused}) => (
-            <Icon
-              size={30}
-              source={focused ? 'home' : 'home-outline'}
-              color={color}
-            />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Scanner"
-        component={ScannerScreen}
-        options={{
-          title: '',
-          tabBarIcon: ({color, focused}) => (
-            <View
-              style={{
-                borderRadius: 50,
-                backgroundColor: theme.colors.secondaryContainer,
-                alignItems: 'center',
-                justifyContent: 'center',
-                bottom: 5,
-                width: 100,
-                height: 60,
-              }}>
-              <Icon
-                size={38}
-                source={focused ? 'camera' : 'camera-outline'}
-                color={color}
-              />
-            </View>
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Settings"
-        component={SettingsScreen}
-        options={{
-          title: 'Settings',
-          tabBarIcon: ({color, focused}) => (
-            <Icon
-              size={30}
-              source={focused ? 'account-wrench' : 'account-wrench-outline'}
-              color={color}
-            />
-          ),
-        }}
-      />
-    </Tab.Navigator>
+    <Stack.Navigator>
+      {!user ? (
+        <Stack.Screen
+          name="Auth"
+          component={LoginScreen}
+          options={{headerShown: false}}
+        />
+      ) : (
+        <>
+          <Stack.Screen
+            name="MainTabs"
+            component={MainTabs}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Details"
+            component={CoinDetails}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ReferFriend"
+            component={ReferFriendScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ReceiveCoin"
+            component={ReceiveCoin}
+            options={{headerShown: false}}
+          />
+        </>
+      )}
+    </Stack.Navigator>
   );
 };
 

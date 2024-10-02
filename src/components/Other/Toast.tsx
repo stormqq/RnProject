@@ -1,13 +1,13 @@
 import {memo} from 'react';
-import {StyleSheet} from 'react-native';
 import {PanGestureHandler} from 'react-native-gesture-handler';
-import {Text} from 'react-native-paper';
+import {Text} from 'tamagui';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
 import {TOAST_COLORS, ToastType} from '../../types/toast';
+import {YStack} from 'tamagui';
 
 type ToastProps = {
   id: number;
@@ -38,27 +38,26 @@ export const Toast = memo(({id, index, onRemove, text, type}: ToastProps) => {
     <PanGestureHandler onGestureEvent={handleGesture}>
       <Animated.View
         style={[
-          {...styles.toast, backgroundColor: TOAST_COLORS[type]},
-          {bottom: 75 + index * 60},
           animatedStyle,
+          {
+            position: 'absolute',
+            bottom: 95 + index * 60,
+            left: 60,
+            right: 60,
+            zIndex: 999,
+          },
         ]}>
-        <Text style={styles.toastText}>{text}</Text>
+        <YStack
+          backgroundColor={TOAST_COLORS[type]}
+          borderRadius="$2"
+          padding="$3"
+          justifyContent="center"
+          alignItems="center">
+          <Text color="white" fontWeight="bold">
+            {text}
+          </Text>
+        </YStack>
       </Animated.View>
     </PanGestureHandler>
   );
-});
-
-const styles = StyleSheet.create({
-  toast: {
-    position: 'absolute',
-    left: 60,
-    right: 60,
-    padding: 15,
-    borderRadius: 5,
-    zIndex: 999,
-  },
-  toastText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
 });

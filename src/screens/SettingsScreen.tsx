@@ -1,90 +1,75 @@
-import {Switch, Text, useTheme} from 'react-native-paper';
-import {useSettingsStore} from '../store/useSettingsStore';
-import {useThemeStore} from '../store/useThemeStore';
-import {CustomThemeType} from '../themes/themes';
+import React from 'react';
+import {YStack, XStack, Avatar, Text, Separator, SizableText} from 'tamagui';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useAuthStore} from '../store/useAuthStore';
-import Lougout from '../components/Auth/Lougout';
-import styled from 'styled-components';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {View} from 'react-native';
+import Login from '../components/Auth/Login';
 
-export default function SettingsScreen() {
-  const {currentTheme, toggleTheme} = useThemeStore();
-  const {isShakingModeActive, setIsShakingModeActive} = useSettingsStore();
-  const theme: CustomThemeType = useTheme();
-  const {user, authError} = useAuthStore();
+const ProfileScreen = () => {
+  const {user} = useAuthStore();
 
   return (
-    <Container theme={theme}>
-      {user && (
-        <WelcomeText theme={theme}>
-          Hi, <UserName>{user.name}</UserName>
-        </WelcomeText>
-      )}
-      <SettingRow>
-        <SettingLabel theme={theme}>Dark theme</SettingLabel>
-        <Switch
-          value={currentTheme === 'dark'}
-          color="#0a7ea4"
-          onValueChange={toggleTheme}
-        />
-      </SettingRow>
-      <SettingRow>
-        <SettingLabel theme={theme}>Shaking mode</SettingLabel>
-        <Switch
-          value={isShakingModeActive}
-          color="#0a7ea4"
-          onValueChange={setIsShakingModeActive}
-        />
-      </SettingRow>
-      <AuthButtons>
-        {user && <Lougout />}
-        {authError && <AuthError>{authError}</AuthError>}
-      </AuthButtons>
-    </Container>
+    <YStack f={1} p="$4">
+      <YStack
+        width={400}
+        height={210}
+        bg="$blue10"
+        p="$4"
+        ai="center"
+        jc="center"
+        br="$4"
+        mb="$3">
+        {user ? (
+          <>
+            <Avatar circular mb="$2" size={80}>
+              <Avatar.Image source={{uri: user.photo}} />
+            </Avatar>
+            <SizableText mb="$2" size="$8" color="$color1" fontWeight="bold">
+              {user.name}
+            </SizableText>
+            <SizableText size="$4" color="$color1">
+              {user.email}
+            </SizableText>
+            <SizableText size="$4" color="$color1">
+              +38 9444977118
+            </SizableText>
+          </>
+        ) : (
+          <Login />
+        )}
+      </YStack>
+
+      <YStack mt="$4" gap="$2.5">
+        <MenuItem icon="backup-restore" text="History" />
+        <Separator />
+        <MenuItem icon="bank" text="Bank Details" />
+        <Separator />
+        <MenuItem icon="bell-outline" text="Notifications" />
+        <Separator />
+        <MenuItem icon="shield-half-full" text="Security" />
+        <Separator />
+        <MenuItem icon="help-circle-outline" text="Help and Support" />
+        <Separator />
+        <MenuItem icon="file-document-outline" text="Terms and Conditions" />
+        <Separator />
+      </YStack>
+    </YStack>
   );
-}
+};
 
-const Container = styled(SafeAreaView)`
-  flex: 1;
-  background-color: ${props => props.theme.colors.background};
-`;
+const MenuItem = ({icon, text}: {icon: string; text: string}) => (
+  <XStack
+    borderBottomColor={'$gray6'}
+    borderBottomWidth={1}
+    ai="center"
+    pb="$5"
+    hoverStyle={{bg: '$gray2'}}
+    pressStyle={{bg: '$gray3'}}>
+    <Icon name={icon} size={24} color="#007bff" />
+    <Text ml="$3" f={1} fontSize="$8" color="$color">
+      {text}
+    </Text>
+    <Icon name="arrow-right" size={24} color="#ccc" />
+  </XStack>
+);
 
-const WelcomeText = styled(Text)<{theme: CustomThemeType}>`
-  font-size: 30px;
-  align-self: center;
-  margin: 20px;
-  color: ${props => props.theme.colors.text};
-`;
-
-const UserName = styled(Text)`
-  font-weight: bold;
-  color: purple;
-`;
-
-const SettingRow = styled(View)`
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px;
-`;
-
-const SettingLabel = styled(Text)<{theme: CustomThemeType}>`
-  font-size: 30px;
-  color: ${props => props.theme.colors.text};
-`;
-
-const AuthButtons = styled(View)`
-  position: absolute;
-  bottom: 20px;
-  left: 0;
-  right: 0;
-  padding: 20px;
-`;
-
-const AuthError = styled(Text)`
-  color: red;
-  text-align: center;
-  font-size: 20px;
-  font-weight: bold;
-`;
+export default ProfileScreen;
